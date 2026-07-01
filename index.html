@@ -29,14 +29,17 @@
     fetch("./daily_codes.json", { cache: "no-store" })
       .then((response) => response.json())
       .then((data) => {
-        const code = data.codes && data.codes[employee];
+        const today = new Date().toISOString().slice(0, 10);
+        const dayCodes = data.dates && data.dates[today] ? data.dates[today] : data.codes;
+        const shownDate = data.dates && data.dates[today] ? today : data.date;
+        const code = dayCodes && dayCodes[employee];
         if (!code) {
           codeEl.textContent = "未找到";
           statusEl.textContent = "请联系门店工作人员。";
           return;
         }
         codeEl.textContent = code;
-        statusEl.textContent = "日期：" + data.date;
+        statusEl.textContent = "日期：" + shownDate;
       })
       .catch(() => {
         codeEl.textContent = "加载失败";
